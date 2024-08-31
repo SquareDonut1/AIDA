@@ -11,6 +11,7 @@ Im looking for work so if your in need of a Dev, please contact me at: ethan.a.w
 - [Installation](#installation)
 - [Usage](#usage)
 - [Making Plugins](#making-plugins)
+- [IMPORTAINT](#importaint)
 
 ## **Features**:
 
@@ -24,7 +25,7 @@ Im looking for work so if your in need of a Dev, please contact me at: ethan.a.w
 
 ## **About AIDA**
 
-AIDA is a assistant that is powered by [Googles Gemini API](https://ai.google.dev/gemini-api), or really any llm with a small amout of motification.
+AIDA is a assistant that is powered by [Googles Gemini API](https://ai.google.dev/gemini-api), or really any LLM with a small amout of motification.
 The TTS and STT are ran localy
 
 ### Whats the point of this project?
@@ -129,11 +130,11 @@ I would recommend using math.ex as an example, but heres mroe to help you out
   If you put the test script in a file and name it with the extantion .ex and run main.py it should show that it loaded in the command line. To test it simply ask the assistant to run the "name of the funtion" funtion (the actual function name MUST be the same as the function_name).
   The LLM should respond and tell you that it returned "Example"
 
-- **IMPORTAINT**
+## **IMPORTAINT**
 
-  Becose its loading python files that can have any amout of code please make sure that you read the source code for any plugin be for you run it
+Becose its loading python files that can have any amout of code please make sure that you read the source code for any plugin be for you run it
 
-  If runing the function you get "Failed to execute the function." make sure that your returning somthing, becouse it progamed that if it gets nothing back from the function it assumes that it dident work
+If runing the function you get "Failed to execute the function." make sure that your returning somthing, becouse it progamed that if it gets nothing back from the function it assumes that it dident work
 
 <sup>
 ps if you hate the name dont blame me i had the LLM name 
