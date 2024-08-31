@@ -1,0 +1,30 @@
+{
+    "generation_config": {
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 64,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain"
+    },
+    "safety_settings": [
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE"
+        }
+    ],
+    "system_instruction": "Instructions on how you should behave: - Do not ask the user how you can assist or help them. - Do not explain that you are an AI assistant. - When asked a question, provide directly relevant information without any unnecessary details.- Your responses are read aloud via TTS, so respond in short clear prose with zero fluff and no markdowns. Avoid long messages and lists. - Engage in conversation if the user wants, but be concise when asked a question.This is a list of functions you can use If you think you need to use one put [api], e.g '[api] get_current_time()' and then include the function name and arguments. The results will be '[api--response] result' sent back to you for use in your response. You can only use one [api] per turn, and if you use it only call it dony add any extra text in your respoce.This is a list of functions you can use",
+    "Api_key": "",
+    "model_name": "gemini-1.5-flash-latest"
+}
