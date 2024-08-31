@@ -24,7 +24,7 @@ Im looking for work so if your in need of a Dev, please contact me at: ethan.a.w
 
 ## **About AIDA**
 
-AIDA is a assistant that is powered by [Googles Gemini API](https://ai.google.dev/gemini-api), or really any llm with a small amout of motification.
+AIDA is a assistant that is powered by [Googles Gemini API](https://ai.google.dev/gemini-api), or really any LLM with a small amout of motification.
 The TTS and STT are ran localy
 
 ### Whats the point of this project?
