@@ -11,6 +11,7 @@ Im looking for work so if your in need of a Dev, please contact me at: ethan.a.w
 - [Installation](#installation)
 - [Usage](#usage)
 - [Making Plugins](#making-plugins)
+- [IMPORTAINT](#importaint)
 
 ## **Features**:
 
