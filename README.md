@@ -30,7 +30,7 @@ The TTS and STT are ran localy
 
 ### Whats the point of this project?
 
-In short its a better version (in my opinan) of Siri/Google assistant, but now for pc, also partly inspaired by how useless the copilot preview is.
+In short its a better version (in my opinion) of Siri/Google assistant, but now for pc, also partly inspaired by how useless the copilot preview is.
 
 I just wanted to make a actully usefull voice assistant that is faster then opening a web browser and typing in your question
 
