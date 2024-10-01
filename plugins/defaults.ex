@@ -80,10 +80,13 @@ def set_clipboard(text = ""):
         return f"Error accessing clipboard: {e}"
 
 
-def save_note(content,filename):
-  dir = os.path.abspath("notes")
-  filepath = os.path.join(dir, filename)
-  with open(filepath, 'w') as file:
-    file.write(content)
-  return "Successfuly saved note"
+def save_note(content, filename):
+    if not filename.endswith('.txt'):
+        filename += '.txt'  # Ensure the filename has .txt extension
+    dir_path = os.path.abspath("Notes")
+    os.makedirs(dir_path, exist_ok=True)  # Create notes directory if it doesn't exist
+    filepath = os.path.join(dir_path, filename)
+    with open(filepath, 'w') as file:
+        file.write(content)
+    return "Successfully saved note"
 
