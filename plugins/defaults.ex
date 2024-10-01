@@ -6,6 +6,11 @@
       "description": "a function that returns a screenshot of the users computer"
     },
     {
+      "function_name": "get_picture()",
+      "arguments": "none",
+      "description": "a function that returns a picture from the users webcam"
+    },
+    {
       "function_name": "get_clipboard()",
       "arguments": "none",
       "description": "a function that returns a the contents of the users clipboard"
@@ -30,8 +35,22 @@
 import os
 import mss
 import mss.tools
+import cv2
 import pyperclip
 
+
+def get_picture():
+    try:
+        cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        ret, frame = cam.read()
+        cam.release()
+        file_path = "captured_camera.png"
+        cv2.imwrite(file_path, frame)  
+        im = upload_to_gemini(file_path)  
+        os.remove("captured_camera.png")
+        return im
+    except Exception as e:
+        return f"Error capturing image: {e}"
 
 def get_screenshot():
     try:

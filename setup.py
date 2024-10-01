@@ -5,6 +5,7 @@ import sys
 import platform
 import requests
 import shutil
+import win32com.client
 
 def update_config(api_key, config_path='config.json'):
     """Update the API key in the config.json file."""
@@ -16,19 +17,38 @@ def update_config(api_key, config_path='config.json'):
     with open(config_path, 'w') as file:
         json.dump(config, file, indent=4)
 
-def create_vbs_script(script_path, venv_path):
-    """Create a VBS script to run the Python script hidden within a virtual environment."""
-    startup_dir = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup')
-    vbs_file = os.path.join(startup_dir, 'run_hidden.vbs')
-    
+def create_ps1_script(script_path, venv_path):
+    """Create a PowerShell script to run the Python script hidden within a virtual environment."""
+    ps1_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'run_hidden.ps1')
+
     # Path to the Python interpreter within the virtual environment
     python_interpreter = os.path.join(venv_path, 'Scripts', 'python.exe')
 
-    with open(vbs_file, 'w') as file:
-        file.write('Set WshShell = CreateObject("WScript.Shell")\n')
-        file.write(f'WshShell.Run "{python_interpreter} {script_path}", 0, False\n')
+    with open(ps1_file, 'w') as file:
+        file.write(f"$psi = New-Object System.Diagnostics.ProcessStartInfo\n")
+        file.write(f"$psi.FileName = '{python_interpreter}'\n")
+        file.write(f"$psi.Arguments = '{script_path}'\n")
+        file.write("$psi.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden\n")
+        file.write("$psi.UseShellExecute = $true\n")
+        file.write("[System.Diagnostics.Process]::Start($psi)\n")
 
-    return vbs_file
+    return ps1_file
+
+def create_shortcut(ps1_file):
+    """Create a shortcut to the PowerShell script in the Startup folder."""
+    startup_dir = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup')
+    shortcut_path = os.path.join(startup_dir, 'run_hidden.lnk')
+
+    # Create the shortcut
+    shell = win32com.client.Dispatch('WScript.Shell')
+    shortcut = shell.CreateShortCut(shortcut_path)
+
+    # Set target to PowerShell and pass the script file as an argument
+    shortcut.TargetPath = "powershell.exe"
+    shortcut.Arguments = f"-ExecutionPolicy Bypass -File \"{ps1_file}\""
+    shortcut.WorkingDirectory = os.path.dirname(ps1_file)
+    shortcut.IconLocation = "powershell.exe"  # Optional: Change icon if desired
+    shortcut.Save()
 
 def create_virtualenv(venv_path):
     """Create a virtual environment if it doesn't exist."""
@@ -98,7 +118,6 @@ def download_ffmpeg():
     else:
         raise NotImplementedError('Platform not supported for FFmpeg installation.')
 
-
 def main():
     print("You will NEED a Gemini API key, which has a free tier.")
     print("The free tier has a limit, but it's so high that it's probably enough.")
@@ -112,7 +131,7 @@ def main():
     print("API key has been updated in config.json\n")
 
     # Ask if the user wants to install FFmpeg and packages
-    install_ffmpeg_and_packages = input("Do you want to install FFmpeg and packages from requirements.txt? \n WARNING: It  probably will not work if you say no (Y/N): ").strip().lower()
+    install_ffmpeg_and_packages = input("Do you want to install FFmpeg and packages from requirements.txt? \n WARNING: It probably will not work if you say no (Y/N): ").strip().lower()
 
     # Assume the virtual environment is in a directory named 'venv' at the same level as the script
     venv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'venv')
@@ -121,10 +140,9 @@ def main():
         # Create virtual environment if not exists
         create_virtualenv(venv_path)
         # Download and extract FFmpeg
- 
+        download_ffmpeg()
         # Install packages from requirements.txt
         install_requirements(venv_path)
-        download_ffmpeg()
         
     else:
         print("FFmpeg and packages will not be installed.")
@@ -135,11 +153,9 @@ def main():
     if add_startup == 'y':
         # Get the directory of the current script
         script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'main.py')
-        vbs_file = create_vbs_script(script_path, venv_path)
+        ps1_file = create_ps1_script(script_path, venv_path)
+        create_shortcut(ps1_file)
         print("Python script has been added to startup.")
-        
-        # Run the VBS script to ensure it is set up correctly
-        subprocess.run(['cscript', vbs_file], check=True)
     else:
         print("Python script will not be added to startup.")
 

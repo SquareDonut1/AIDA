@@ -15,6 +15,8 @@ from pynput import keyboard  # Import pynput for global key listening
 # Set up Gemini API key
 
 
+
+
 # Initialize global variables
 pressed_keys = set()
 recording = False
