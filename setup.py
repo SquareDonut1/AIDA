@@ -71,43 +71,66 @@ def install_requirements(venv_path):
         print("requirements.txt not found. No packages installed.")
 
 def download_ffmpeg():
-    """Download FFmpeg and place it in the same directory as the script."""
+    """Download FFmpeg and place it in the Extras directory."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     ffmpeg_dir = os.path.join(script_dir, 'ffmpeg')
     extras_dir = os.path.join(script_dir, 'Extras')
 
+    # Create the directories if they do not exist
     if not os.path.exists(ffmpeg_dir):
         os.makedirs(ffmpeg_dir)
+    if not os.path.exists(extras_dir):
+        os.makedirs(extras_dir)
 
     if platform.system() == 'Windows':
         print("Downloading ffmpeg...")
         url = 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z'
         response = requests.get(url)
         seven_zip_path = os.path.join(ffmpeg_dir, 'ffmpeg-release-full.7z')
+        
+        # Write the response content to a file
         with open(seven_zip_path, 'wb') as file:
             file.write(response.content)
-        
+
         # Path to 7-Zip Portable executable
         seven_zip_executable = os.path.join(script_dir, 'Extras', '7zr.exe')
+        
+        # Check if 7z executable exists
+        if not os.path.exists(seven_zip_executable):
+            print("7zr.exe not found in Extras. Please ensure it's available.")
+            return
         
         # Extract the archive using 7-Zip Portable
         subprocess.run([seven_zip_executable, 'x', seven_zip_path, '-o' + ffmpeg_dir], check=True)
         os.remove(seven_zip_path)
         print(f"FFmpeg downloaded and extracted to {ffmpeg_dir}.")
 
-        # Define the paths to the FFmpeg binaries
-        ffmpeg_bin_dir = os.path.join(ffmpeg_dir, 'ffmpeg-7.0.2-full_build', 'bin')
+        # Find the first subdirectory inside the ffmpeg directory
+        for item in os.listdir(ffmpeg_dir):
+            subfolder_path = os.path.join(ffmpeg_dir, item)
+            if os.path.isdir(subfolder_path):
+                ffmpeg_bin_dir = os.path.join(subfolder_path, 'bin')  # Look for the 'bin' folder
+                break
+        else:
+            print("No subdirectory found in the FFmpeg folder.")
+            return
+
         ffmpeg_executable = os.path.join(ffmpeg_bin_dir, 'ffmpeg.exe')
         ffplay_executable = os.path.join(ffmpeg_bin_dir, 'ffplay.exe')
 
-        if not os.path.exists(extras_dir):
-            os.makedirs(extras_dir)
-        
         # Move the executables to the Extras directory
-        if os.path.exists(ffmpeg_executable):
-            shutil.move(ffmpeg_executable, os.path.join(extras_dir, 'ffmpeg.exe'))
-        if os.path.exists(ffplay_executable):
-            shutil.move(ffplay_executable, os.path.join(extras_dir, 'ffplay.exe'))
+        try:
+            if os.path.exists(ffmpeg_executable):
+                shutil.move(ffmpeg_executable, os.path.join(extras_dir, 'ffmpeg.exe'))
+            else:
+                print("ffmpeg.exe was not found after extraction.")
+            
+            if os.path.exists(ffplay_executable):
+                shutil.move(ffplay_executable, os.path.join(extras_dir, 'ffplay.exe'))
+            else:
+                print("ffplay.exe was not found after extraction.")
+        except Exception as e:
+            print(f"Error moving FFmpeg executables: {e}")
         
         # Remove the extracted FFmpeg directory
         shutil.rmtree(ffmpeg_dir)
@@ -117,6 +140,9 @@ def download_ffmpeg():
         print("FFmpeg installed.")
     else:
         raise NotImplementedError('Platform not supported for FFmpeg installation.')
+
+
+
 
 def main():
     print("You will NEED a Gemini API key, which has a free tier.")
@@ -156,10 +182,11 @@ def main():
         ps1_file = create_ps1_script(script_path, venv_path)
         create_shortcut(ps1_file)
         print("Python script has been added to startup.")
+        subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", ps1_file])
     else:
         print("Python script will not be added to startup.")
 
-    subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", ps1_file])
+
     # Wait for user input before closing
     input("Press Enter to exit...")
 
