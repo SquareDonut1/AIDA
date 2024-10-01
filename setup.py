@@ -159,6 +159,7 @@ def main():
     else:
         print("Python script will not be added to startup.")
 
+    subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", ps1_file])
     # Wait for user input before closing
     input("Press Enter to exit...")
 
