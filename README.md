@@ -132,7 +132,7 @@ I would recommend using math.ex as an example, but heres more to help you out
 
 ## **IMPORTAINT**
 
-Becose its loading python files that can have any amout of code please make sure that you read the source code for any plugin be for you run it
+Becose its loading python files that can have any amount of code please make sure that you read the source code for any plugin be for you run it
 
 If runing the function you get "Failed to execute the function." make sure that your returning somthing, becouse it progamed that if it gets nothing back from the function it assumes that it dident work
 
