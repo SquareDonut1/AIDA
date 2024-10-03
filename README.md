@@ -95,7 +95,7 @@ now that you have python time to install AIDA
 
 ## **Making Plugins**
 
-I would recommend using math.ex as an example, but heres mroe to help you out
+I would recommend using math.ex as an example, but heres more to help you out
 
 - **About the ex**:
 
